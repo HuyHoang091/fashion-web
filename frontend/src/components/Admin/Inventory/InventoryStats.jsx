@@ -6,7 +6,7 @@ const InventoryStats = ({ stats }) => {
                     <i className="fas fa-boxes"></i>
                 </div>
                 <div className="stat-info">
-                    <div className="label">Tổng sản phẩm</div>
+                    <div className="label-inventory">Tổng sản phẩm</div>
                     <div className="value">{stats.total}</div>
                 </div>
             </div>
@@ -16,7 +16,7 @@ const InventoryStats = ({ stats }) => {
                     <i className="fas fa-check-circle"></i>
                 </div>
                 <div className="stat-info">
-                    <div className="label">Còn hàng</div>
+                    <div className="label-inventory">Còn hàng</div>
                     <div className="value">{stats.inStock}</div>
                 </div>
             </div>
@@ -26,7 +26,7 @@ const InventoryStats = ({ stats }) => {
                     <i className="fas fa-exclamation-triangle"></i>
                 </div>
                 <div className="stat-info">
-                    <div className="label">Sắp hết</div>
+                    <div className="label-inventory">Sắp hết</div>
                     <div className="value">{stats.lowStock}</div>
                 </div>
             </div>
@@ -36,7 +36,7 @@ const InventoryStats = ({ stats }) => {
                     <i className="fas fa-times-circle"></i>
                 </div>
                 <div className="stat-info">
-                    <div className="label">Hết hàng</div>
+                    <div className="label-inventory">Hết hàng</div>
                     <div className="value">{stats.outOfStock}</div>
                 </div>
             </div>

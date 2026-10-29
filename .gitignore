@@ -18,3 +18,12 @@ frontend/yarn.lock
 frontend/node_modules/
 .idea/watcherTasks.xml
 .idea/
+
+ai.py
+test.py
+test1.py
+chatbox1.py
+auto.py
+auto-pdf.py
+lib
+docexcel.py

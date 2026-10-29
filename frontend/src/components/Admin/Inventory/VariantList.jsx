@@ -89,7 +89,7 @@ const VariantList = ({ variants, onChange, colors = [], onAddColor, onEditColor,
                 <h4>Biến thể sản phẩm</h4>
                 <button
                     type="button"
-                    className="btn btn-success btn-small"
+                    className="btn-inventory btn-success btn-small"
                     onClick={handleAddVariant}
                 >
                     <i className="fas fa-plus"></i> Thêm biến thể
@@ -223,7 +223,7 @@ const VariantList = ({ variants, onChange, colors = [], onAddColor, onEditColor,
                                         </button>
                                         <div className="variant-preview">
                                             {variant.url ? (
-                                                <img src={variant.url} alt="Variant" />
+                                                <img src={variant.url ? `${variant.url.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} alt="Variant" />
                                             ) : (
                                                 <span>Chưa có ảnh</span>
                                             )}

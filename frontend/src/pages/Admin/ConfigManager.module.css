@@ -286,7 +286,7 @@
 }
 
 /* Dark mode support (optional) */
-@media (prefers-color-scheme: dark) {
+/* @media (prefers-color-scheme: dark) {
     .tabContainer {
         background: #1a202c;
     }
@@ -317,7 +317,7 @@
     .formSection {
         background: #2d3748;
     }
-}
+} */
 
 .infoBox {
     background-color: #f5f9ff;

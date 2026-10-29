@@ -96,7 +96,7 @@ export const INITIAL_PRODUCT = [
 		"name": "Quần Jean",
 		"description": "Quần jean slim fit co giãn, phù hợp mọi dáng người",
 		"slug": "quan-jean",
-		"url": "http://localhost:8080/images/ee6a2c90-c78a-49af-83eb-6fa80a0cab63_sp010.jpg",
+		"url": "https://c92db550f041.ngrok-free.app/images/ee6a2c90-c78a-49af-83eb-6fa80a0cab63_sp010.jpg",
 		"sizes": [
 			"M",
 			"S"
@@ -124,7 +124,7 @@ export const INITIAL_PRODUCT = [
 		"name": "Áo Thun Nam",
 		"description": "Áo thun nam cotton thoáng mát",
 		"slug": "ao-thun-nam",
-		"url": "http://localhost:8080/images/fc6762f9-ddff-4914-a2fe-7a51b2dc3b85_sp012.jpg",
+		"url": "https://c92db550f041.ngrok-free.app/images/fc6762f9-ddff-4914-a2fe-7a51b2dc3b85_sp012.jpg",
 		"sizes": [
 			"L",
 			"M"

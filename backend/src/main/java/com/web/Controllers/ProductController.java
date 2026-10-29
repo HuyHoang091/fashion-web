@@ -99,4 +99,9 @@ public class ProductController {
         }
         return ResponseEntity.notFound().build();
     }
+
+    @GetMapping("/chunks")
+    public List<String> getProductChunks() {
+        return productService.getProductChunks();
+    }
 }

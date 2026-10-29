@@ -28,7 +28,7 @@ const LandingPage = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:8080/api/products/info');
+        const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/products/info`);
         if (Array.isArray(response.data)) {
           // Lấy 4 sản phẩm đầu tiên cho featured products
           const featured = response.data.slice(0, 4).map(product => ({
@@ -146,7 +146,7 @@ const LandingPage = () => {
       
       {/* Chỉ hiển thị phần Sale khi có sản phẩm giảm giá */}
       {saleProducts.length > 0 && (
-        <SaleLayout endTime="2025-10-20T23:59:59+07:00">
+        <SaleLayout endTime="2025-10-26T23:59:59+07:00">
           {saleProducts.map((item, idx) => (
             <SaleProduct items={item} key={idx} />
           ))}

@@ -236,7 +236,7 @@ async def add_from_excel(file: UploadFile = File(...), batch_size: int = 50):
                     print(f"Không thể xóa file tạm: {temp_file_path}. File sẽ được giữ lại.")
 
 @app.post("/search/")
-async def search(file: UploadFile = File(...), top_k: int = 5):
+async def search(file: UploadFile = File(...), top_k: int = 20):
     img_bytes = await file.read()
     image = Image.open(io.BytesIO(img_bytes)).convert("RGB")
 

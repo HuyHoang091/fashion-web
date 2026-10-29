@@ -3,6 +3,7 @@ import DocumentList from './DocumentList';
 import ChunkList from './ChunkList';
 import Toast from '../../Toast/Toast';
 import styles from './RAGManager.module.css';
+import axios from 'axios';
 
 const API_URL = 'http://localhost:8002';
 
@@ -76,54 +77,64 @@ const RAGManager = () => {
   };
 
   // Push system test data
-  const handlePushSystemData = async (documentId, documentName) => {
+  const handlePushSystemData = async (documentId, documentName, action) => {
     setLoading(true);
     try {
-      // Create 5 test chunks with system identifier
-      const testData = [
-        { content: "Đây là dữ liệu hệ thống mẫu 1", category: "system", importance: "high" },
-        { content: "Đây là dữ liệu hệ thống mẫu 2", category: "system", importance: "medium" },
-        { content: "Đây là dữ liệu hệ thống mẫu 3", category: "system", importance: "low" },
-        { content: "Đây là dữ liệu hệ thống mẫu 4", category: "system", importance: "high" },
-        { content: "Đây là dữ liệu hệ thống mẫu 5", category: "system", importance: "medium" }
-      ];
-      
-      const response = await fetch(`${API_URL}/index/json`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          json_data: testData,
-          content_field: "content",
-          metadata_fields: ["category", "importance"],
-          document_info: {
-            document_id: documentId ? documentId : undefined,
-            name: documentName ? documentName : "System Data",
-            description: "System data for RAG processing",
-            source_type: "system",
-            tags: ["system", "test", "data"]
-          }
-        })
-      });
-      
-      if (!response.ok) {
-        throw new Error(`Error ${response.status}: ${response.statusText}`);
-      }
-      
-      const result = await response.json();
-      setSystemDocumentId(result.document_id);
-      
-      // Refresh document list
-      fetchDocuments();
-      
-      showToast("System data successfully pushed to RAG!");
+        if (action === 'reload') {
+          await fetch(`${API_URL}/documents/${documentId}`, {
+            method: 'DELETE'
+          });
+        }
+        // Fetch chunks từ API mới
+        const response = await axios.get('http://localhost:8080/api/products/chunks');
+        const chunks = response.data; // Đây là danh sách các chunk từ API
+
+        console.log('Fetched chunks:', chunks);
+
+        // Chuyển đổi chunks thành định dạng phù hợp cho RAG
+        const formattedChunks = chunks.map((chunk) => ({
+            content: chunk, // Nội dung chunk
+            category: "system", // Gắn nhãn "system" cho tất cả các chunk
+            importance: "medium" // Gắn mức độ quan trọng mặc định
+        }));
+
+        // Gửi dữ liệu đến RAG API
+        const ragResponse = await fetch(`${API_URL}/index/json`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                json_data: formattedChunks,
+                content_field: "content",
+                metadata_fields: ["category", "importance"],
+                document_info: {
+                    document_id: documentId ? documentId : undefined,
+                    name: documentName ? documentName : "System Data",
+                    description: "System data for RAG processing",
+                    source_type: "system",
+                    tags: ["system", "data"]
+                }
+            })
+        });
+
+        if (!ragResponse.ok) {
+            throw new Error(`Error ${ragResponse.status}: ${ragResponse.statusText}`);
+        }
+
+        const result = await ragResponse.json();
+        setSystemDocumentId(result.document_id);
+
+        // Refresh document list
+        fetchDocuments();
+
+        showToast("System data successfully pushed to RAG!");
     } catch (err) {
-      console.error('Error pushing system data:', err);
-      setError(err.message);
-      showToast(`Failed to push system data: ${err.message}`, 'error');
+        console.error('Error pushing system data:', err);
+        setError(err.message);
+        showToast(`Failed to push system data: ${err.message}`, 'error');
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
   

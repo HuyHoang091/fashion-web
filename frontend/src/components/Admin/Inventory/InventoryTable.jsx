@@ -59,7 +59,7 @@ const InventoryTable = ({ data, loading, onEdit, onDeleteProduct, onDeleteVarian
                                             <div className="product-info">
                                                 <img
                                                     className="product-img"
-                                                    src={item.imageUrl || '/placeholder.png'}
+                                                    src={item.imageUrl ? `${item.imageUrl.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'}
                                                     alt={item.name}
                                                 />
                                                 <div className="product-details">

@@ -106,7 +106,7 @@ const InventoryControls = ({ onFilter, onAddProduct }) => {
                         ))}
                     </select>
 
-                    <button className="btn btn-success" onClick={onAddProduct}>
+                    <button className="btn-inventory btn-success" onClick={onAddProduct}>
                         <i className="fas fa-plus"></i>
                         Thêm sản phẩm
                     </button>

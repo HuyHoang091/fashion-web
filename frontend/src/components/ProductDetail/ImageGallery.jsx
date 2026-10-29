@@ -23,7 +23,7 @@ const ImageGallery = ({ images, productName }) => {
         <div className="image-gallery">
             <div className="main-image">
                 <img 
-                    src={images[currentImageIndex]} 
+                    src={images[currentImageIndex] ? `${images[currentImageIndex].replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} 
                     alt={`${productName} - View ${currentImageIndex + 1}`}
                 />
                 <button 
@@ -42,7 +42,7 @@ const ImageGallery = ({ images, productName }) => {
                             className={`thumbnail ${index === currentImageIndex ? 'active' : ''}`}
                             onClick={() => selectImage(index)}
                         >
-                            <img src={image} alt={`${productName} thumbnail ${index + 1}`} />
+                            <img src={image ? `${image.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} alt={`${productName} thumbnail ${index + 1}`} />
                         </div>
                     ))}
                 </div>

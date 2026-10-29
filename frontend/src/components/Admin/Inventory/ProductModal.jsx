@@ -790,7 +790,7 @@ const ProductModal = ({ productId, onClose, onSave }) => {
                             <div className="image-preview">
                                 {productImages.map((url, index) => (
                                     <div key={index} className="image-preview-item">
-                                        <img src={url} alt={`Product ${index + 1}`} />
+                                        <img src={url ? `${url.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} alt={`Product ${index + 1}`} />
                                         <button 
                                             type="button" 
                                             onClick={() => handleRemoveImage(index)}
@@ -815,10 +815,10 @@ const ProductModal = ({ productId, onClose, onSave }) => {
                         />
 
                         <div className="form-actions">
-                            <button type="button" className="btn btn-secondary" onClick={onClose}>
+                            <button type="button" className="btn-inventory btn-secondary" onClick={onClose}>
                                 Hủy
                             </button>
-                            <button type="submit" className="btn btn-primary" disabled={loading}>
+                            <button type="submit" className="btn-inventory btn-primary" disabled={loading}>
                                 {loading ? 'Đang lưu...' : 'Lưu'}
                             </button>
                         </div>
@@ -855,13 +855,13 @@ const ProductModal = ({ productId, onClose, onSave }) => {
                         </div>
                         <div className="popup-footer">
                             <button 
-                                className="btn btn-secondary"
+                                className="btn-inventory btn-secondary"
                                 onClick={() => setShowBrandModal(false)}
                             >
                                 Hủy
                             </button>
                             <button 
-                                className="btn btn-primary"
+                                className="btn-inventory btn-primary"
                                 onClick={handleSaveBrand}
                                 disabled={apiStatus.loading}
                             >
@@ -918,13 +918,13 @@ const ProductModal = ({ productId, onClose, onSave }) => {
                         </div>
                         <div className="popup-footer">
                             <button 
-                                className="btn btn-secondary"
+                                className="btn-inventory btn-secondary"
                                 onClick={() => setShowCategoryModal(false)}
                             >
                                 Hủy
                             </button>
                             <button 
-                                className="btn btn-primary"
+                                className="btn-inventory btn-primary"
                                 onClick={handleSaveCategory}
                                 disabled={apiStatus.loading}
                             >
@@ -987,13 +987,13 @@ const ProductModal = ({ productId, onClose, onSave }) => {
                         </div>
                         <div className="popup-footer">
                             <button 
-                                className="btn btn-secondary"
+                                className="btn-inventory btn-secondary"
                                 onClick={() => setShowColorModal(false)}
                             >
                                 Hủy
                             </button>
                             <button 
-                                className="btn btn-primary"
+                                className="btn-inventory btn-primary"
                                 onClick={handleSaveColor}
                                 disabled={apiStatus.loading}
                             >

@@ -25,14 +25,14 @@ const AdminCancelRequests = () => {
             } else {
                 setLoading(true);
             }
-            
-            const response = await axios.get('http://localhost:8080/api/orders/cancel-requests');
-            
+
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/cancel-requests`);
+
             if (response.data && response.data.length > 0) {
                 const requestsWithOrderDetails = await Promise.all(
                     response.data.map(async (request) => {
                         try {
-                            const orderResponse = await axios.get(`http://localhost:8080/api/orders/${request.orderId}/details`);
+                            const orderResponse = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/${request.orderId}/details`);
                             return { ...request, orderDetails: orderResponse.data[0] };
                         } catch (err) {
                             console.error(`Error fetching details for order ${request.orderId}:`, err);
@@ -77,7 +77,7 @@ const AdminCancelRequests = () => {
         // Chỉ tự động cập nhật số lượng yêu cầu (không reload toàn bộ danh sách)
         const intervalId = setInterval(async () => {
             try {
-                const response = await axios.get('http://localhost:8080/api/orders/cancel-requests');
+                const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/cancel-requests`);
                 const newCount = response.data.length;
                 const oldCount = previousCountRef.current;
 
@@ -147,7 +147,7 @@ const AdminCancelRequests = () => {
         try {
             setActionLoading(true);
             
-            await axios.post(`http://localhost:8080/api/orders/${selectedRequest.orderId}/confirm-cancel`, {
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/orders/${selectedRequest.orderId}/confirm-cancel`, {
                 adminNote: adminNote
             });
             
@@ -177,8 +177,8 @@ const AdminCancelRequests = () => {
         
         try {
             setActionLoading(true);
-            
-            await axios.post(`http://localhost:8080/api/orders/${selectedRequest.orderId}/reject-cancel`, {
+
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/orders/${selectedRequest.orderId}/reject-cancel`, {
                 adminNote: adminNote
             });
             

@@ -14,6 +14,7 @@ const ChunkList = ({ documentId, onBack, onRefresh, showToast, styles }) => {
     content: '',
     metadata: {}
   });
+  const [isDetailedView, setIsDetailedView] = useState(false); // State để quản lý chế độ xem
   
   // Fetch chunks on mount and when documentId changes
   useEffect(() => {
@@ -321,6 +322,12 @@ const ChunkList = ({ documentId, onBack, onRefresh, showToast, styles }) => {
         >
           <i className="fas fa-plus"></i> Add Chunk
         </button>
+        <button
+          className={`${styles["btn"]} ${styles["toggle-view-btn"]}`}
+          onClick={() => setIsDetailedView(!isDetailedView)} // Toggle chế độ xem
+        >
+          {isDetailedView ? 'Switch to Compact View' : 'Switch to Detailed View'}
+        </button>
       </div>
 
       {/* Add new chunk form */}
@@ -381,7 +388,14 @@ const ChunkList = ({ documentId, onBack, onRefresh, showToast, styles }) => {
                       onChange={() => handleToggleChunk(chunk.id)}
                     />
                   </td>
-                  <td className={styles["content-cell"]}>{chunk.content}</td>
+                  <td
+                    className={styles["content-cell"]}
+                    style={{
+                      whiteSpace: isDetailedView ? 'pre-wrap' : 'normal' // Áp dụng white-space
+                    }}
+                  >
+                    {chunk.content}
+                  </td>
                   <td>
                     <label className={styles["toggle-switch"]}>
                       <input 

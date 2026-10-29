@@ -48,10 +48,10 @@ export const createSalesCountTooltip = (context) => {
 	return 'Đã bán: ' + context.parsed.x + ' sản phẩm';
 };
 
-export const createPercentageTooltip = (context) => {
+export const createPercentageTooltip = (context, suffix) => {
 	const label = context.label || '';
 	const value = context.parsed || 0;
-	return label + ': ' + value + '%';
+	return label + ': ' + value + (suffix || '%');
 };
 
 export const createMonthTickCallback = (value, index, ticks) => {

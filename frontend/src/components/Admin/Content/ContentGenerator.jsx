@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Copy, Sparkles, RefreshCw, Package, Tag, User, MessageSquare, Gift, Calendar, TrendingUp } from 'lucide-react';
+import Toast from '../../Toast/Toast';
+import { Copy, Sparkles, RefreshCw, Package, Tag, User, MessageSquare, Gift, Calendar, TrendingUp, Send } from 'lucide-react';
 
 // Updated styles object
 const styles = {
@@ -333,10 +334,26 @@ const ContentGenerator = () => {
   const [categories, setCategories] = useState([]);
   const [generatedContent, setGeneratedContent] = useState('');
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState({ products: '', categories: '' });
+  const [submitting, setSubmitting] = useState(false);
+  const [apiResponse, setApiResponse] = useState('');
+  const [error, setError] = useState({ products: '', categories: '', api: '' });
   const [focusedInput, setFocusedInput] = useState(null);
   const [hoveredButton, setHoveredButton] = useState(null);
   const [hoveredTag, setHoveredTag] = useState(null);
+  const [toasts, setToasts] = useState([]);
+
+  const showToast = (message, type = 'success') => {
+      const id = Date.now();
+      setToasts(prev => [...prev, { id, message, type }]);
+      
+      setTimeout(() => {
+        removeToast(id);
+      }, 3000);
+  };
+
+  const removeToast = (id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  };
   
   // Generate random bubbles
   const bubbles = Array.from({ length: 12 }).map((_, index) => {
@@ -359,7 +376,7 @@ const ContentGenerator = () => {
 
   const fetchProducts = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/products/inventory');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/products/inventory`);
       if (!response.ok) throw new Error('Không thể tải sản phẩm');
       const data = await response.json();
       setProducts(data);
@@ -372,7 +389,7 @@ const ContentGenerator = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch('http://localhost:8080/api/categorys/');
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/api/categorys/`);
       if (!response.ok) throw new Error('Không thể tải danh mục');
       const data = await response.json();
       setCategories(data);
@@ -426,7 +443,7 @@ const ContentGenerator = () => {
             prompt += `\n${index + 1}. ${product.name}\n`;
             prompt += `   • Thương hiệu: ${product.brand}\n`;
             prompt += `   • SKU: ${product.sku}\n`;
-            prompt += `   • Kích thước: ${product.size} | Màu sắc: ${product.color}\n`;
+            prompt += `   • Kích thước: ${product.size} | Màu sắc: ${product.color.split(',')[0]}\n`;
             prompt += `   • Giá bán: ${product.price.toLocaleString('vi-VN')}đ\n`;
             prompt += `   • Danh mục: ${product.category}\n`;
             prompt += `   • Tồn kho: ${product.stock} sản phẩm\n`;
@@ -484,12 +501,48 @@ const ContentGenerator = () => {
       
       setGeneratedContent(prompt);
       setLoading(false);
+      setApiResponse('');
+      setError(prev => ({ ...prev, api: '' }));
     }, 800);
+  };
+
+  const submitPromptToAPI = async () => {
+    if (!generatedContent) {
+      showToast('⚠️ Vui lòng tạo prompt trước khi gửi!', 'info');
+      return;
+    }
+
+    setSubmitting(true);
+    setError(prev => ({ ...prev, api: '' }));
+
+    try {
+      const formData = new FormData();
+      formData.append('field-0', generatedContent);
+
+      const response = await fetch('http://localhost:5678/form/6e9f8a5b-2f3b-4ea5-927d-76a9a34febc9', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const result = await response.json();
+      setApiResponse(JSON.stringify(result, null, 2));
+      showToast('✅ Đã gửi prompt thành công!');
+    } catch (err) {
+      console.error('Error submitting prompt:', err);
+      setError(prev => ({ ...prev, api: err.message }));
+      showToast('❌ Lỗi khi gửi prompt: ' + err.message, 'error');
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   const copyToClipboard = () => {
     navigator.clipboard.writeText(generatedContent);
-    alert('✅ Đã copy prompt vào clipboard!');
+    showToast('✅ Đã copy prompt vào clipboard!');
   };
 
   const resetForm = () => {
@@ -598,7 +651,7 @@ const ContentGenerator = () => {
                 >
                   {products.map(product => (
                     <option key={product.variantId} value={product.variantId} style={styles.selectOption}>
-                      {product.name} - {product.brand} (Size: {product.size}, Màu: {product.color})
+                      {product.name} - {product.brand} (Size: {product.size}, Màu: {product.color.split(',')[0]})
                     </option>
                   ))}
                 </select>
@@ -795,6 +848,22 @@ const ContentGenerator = () => {
             <button 
               style={{
                 ...styles.button,
+                background: 'linear-gradient(135deg, #2196F3 0%, #1976D2 100%)',
+                boxShadow: '0 8px 20px rgba(33, 150, 243, 0.25)',
+                ...(hoveredButton === 'submit' ? styles.buttonHover : {})
+              }}
+              onClick={submitPromptToAPI}
+              disabled={submitting || !generatedContent}
+              onMouseEnter={() => setHoveredButton('submit')}
+              onMouseLeave={() => setHoveredButton(null)}
+            >
+              <Send size={20} />
+              {submitting ? 'Đang gửi...' : 'Tạo bài viết'}
+            </button>
+            
+            <button 
+              style={{
+                ...styles.button,
                 ...(hoveredButton === 'generate' ? styles.buttonHover : {})
               }}
               onClick={generateContent}
@@ -803,8 +872,9 @@ const ContentGenerator = () => {
               onMouseLeave={() => setHoveredButton(null)}
             >
               <Sparkles size={20} />
-              {loading ? 'Đang tạo prompt...' : 'Tạo Prompt'}
+              {loading ? 'Đang tạo prompt...' : 'Preview'}
             </button>
+            
             <button 
               style={{
                 ...styles.button,
@@ -819,6 +889,7 @@ const ContentGenerator = () => {
               Làm mới
             </button>
           </div>
+          {error.api && <p style={styles.errorText}>❌ {error.api}</p>}
         </div>
 
         {/* Output */}
@@ -851,6 +922,22 @@ const ContentGenerator = () => {
               ) : (
                 generatedContent
               )}
+            </div>
+            <Toast toasts={toasts} removeToast={removeToast} />
+          </div>
+        )}
+
+        {/* API Response */}
+        {apiResponse && (
+          <div style={styles.outputCard}>
+            <div style={styles.outputHeader}>
+              <h2 style={styles.cardTitle}>
+                <Send style={styles.icon} />
+                Phản hồi từ API
+              </h2>
+            </div>
+            <div style={styles.outputContent}>
+              {apiResponse}
             </div>
           </div>
         )}

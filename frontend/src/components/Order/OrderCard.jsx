@@ -26,7 +26,7 @@ const OrderCard = ({ order }) => {
     const fetchOrderItems = async () => {
         try {
             setLoadingItems(true);
-            const response = await axios.get(`http://localhost:8080/api/orders/${order.id}/items`);
+            const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/orders/${order.id}/items`);
             
             if (response.data && Array.isArray(response.data)) {
                 setOrderItems(response.data);
@@ -48,7 +48,7 @@ const OrderCard = ({ order }) => {
                     const item = uniqueItems[productName];
                     try {
                         const reviewResponse = await axios.get(
-                            `http://localhost:8080/api/reviews/${userId}/variant/${item.variantId}`
+                            `${process.env.REACT_APP_API_URL}/api/reviews/${userId}/variant/${item.variantId}`
                         );
                         reviewStatus[item.variantId] = reviewResponse.data && reviewResponse.data.length > 0;
                     } catch (error) {
@@ -145,8 +145,8 @@ const OrderCard = ({ order }) => {
             setCancelLoading(true);
             const user = JSON.parse(localStorage.getItem('user')) || {};
             const requestedBy = user.id ? `${user.fullName} (ID: ${user.id})` : 'Khách hàng';
-            
-            await axios.post(`http://localhost:8080/api/orders/${order.id}/cancel-request`, {
+
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/orders/${order.id}/cancel-request`, {
                 reason: reason,
                 requestedBy: requestedBy
             });
@@ -184,7 +184,7 @@ const OrderCard = ({ order }) => {
                 return;
             }
 
-            await axios.post('http://localhost:8080/api/reviews', {
+            await axios.post(`${process.env.REACT_APP_API_URL}/api/reviews`, {
                 variantId: selectedItem.variantId.toString(),
                 userId: userId.toString(),
                 rating: rating.toString(),

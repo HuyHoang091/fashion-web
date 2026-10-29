@@ -212,7 +212,7 @@
     border: 2px solid white;
 }
 
-.checkout-page .product-info {
+.checkout-page .product-info-checkout {
     flex: 1;
     min-width: 0;
 }

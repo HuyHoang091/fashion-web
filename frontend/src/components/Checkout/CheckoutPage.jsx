@@ -107,11 +107,12 @@ const CheckoutPage = () => {
                 const userId = JSON.parse(localStorage.getItem("user")).id;
                 const name = JSON.parse(localStorage.getItem("user")).fullName;
                 const addressId = selectedAddress.id;
+
                 // Tạo đơn hàng
                 const orderResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/orders/create`, {
                     userId: userId,
                     addressId: addressId,
-                    status: 'pending',
+                    status: 'pending', // Đơn hàng được đánh dấu là đang chờ
                     createBy: name,
                     note: '',
                     items: orderItems.map(item => ({
@@ -120,13 +121,27 @@ const CheckoutPage = () => {
                         quantity: item.quantity.toString()
                     }))
                 });
+
                 const orderId = orderResponse.data; // Lấy order_id từ phản hồi API
                 console.log('Order created successfully:', orderResponse.data);
+
+                // Tạo thanh toán
+                const paymentResponse = await axios.post(`${process.env.REACT_APP_API_URL}/api/payment/create`, {
+                    order: { id: orderId },
+                    method: selectedPayment, // Phương thức thanh toán là COD
+                    amount: total, // Tổng số tiền
+                    status: 'pending', // Thanh toán đang chờ
+                    captureId: null // Không có captureId cho COD
+                });
+
+                console.log('Payment created successfully:', paymentResponse.data);
+
+                // Điều hướng về trang chủ hoặc trang xác nhận đơn hàng
                 navigate('/');
                 return;
             } catch (error) {
-                console.error('Error creating order:', error);
-                alert('Đã xảy ra lỗi khi tạo đơn hàng. Vui lòng thử lại.');
+                console.error('Error creating order or payment:', error);
+                alert('Đã xảy ra lỗi khi tạo đơn hàng hoặc thanh toán. Vui lòng thử lại.');
                 return;
             }
         }

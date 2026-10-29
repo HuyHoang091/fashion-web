@@ -139,11 +139,16 @@ export const Dashboard = () => {
             sales: item.totalSold
         })));
 
-        setCategoryData(data.revenueByCategory.map(item => ({
+        const sumRevenue = data.revenueByCategory.reduce((sum, item) => sum + item.revenue, 0);
+		console.log("Sum Revenue:", sumRevenue);
+        setCategoryData(data.revenueByCategory.map(item => {
+			console.log("Item:", item);
+			return ({
             name: item.categoryName,
-            value: item.revenue,
+            value: sumRevenue > 0 ? (item.revenue * 100 / sumRevenue).toFixed(2) : 0,
             color: generateRandomColor() // Tạo màu ngẫu nhiên cho biểu đồ
-        })));
+        })
+		}));
 
         setWeeklyData(data.revenueLast7Days.map(item => ({
             day: item.date,

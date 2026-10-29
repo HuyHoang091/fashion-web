@@ -207,7 +207,7 @@ input:checked + .toggle-slider:before {
 }
 
 .content-cell {
-  white-space: pre-wrap;
+  /* white-space: pre-wrap; */
   max-width: 600px;
 }
 

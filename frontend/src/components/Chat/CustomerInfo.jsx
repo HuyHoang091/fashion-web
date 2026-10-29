@@ -856,7 +856,7 @@ const CustomerInfo = ({ userId, userName, isInline = false }) => {
                           <div key={index} className={styles.orderProduct}>
                             <div className={styles.productImage}>
                               {item.imageUrl ? (
-                                <img src={item.imageUrl} alt={item.productName} />
+                                <img src={item.imageUrl ? `${item.imageUrl.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} alt={item.productName} />
                               ) : (
                                 <div className={styles.noImage}>Không có hình</div>
                               )}
@@ -920,7 +920,7 @@ const CustomerInfo = ({ userId, userName, isInline = false }) => {
                           onClick={() => handleSelectProduct(product.slug, product.priceNow)}
                         >
                           <div className={styles.resultImage}>
-                            <img src={product.url} alt={product.name} />
+                            <img src={product.url ? `${product.url.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} alt={product.name} />
                           </div>
                           <div className={styles.resultInfo}>
                             <div className={styles.resultName}>{product.name}</div>
@@ -958,7 +958,7 @@ const CustomerInfo = ({ userId, userName, isInline = false }) => {
                         onClick={() => handleSelectVariant(variant)}
                       >
                         <div className={styles.variantImage}>
-                          <img src={variant.imageUrl} alt={variant.name} />
+                          <img src={variant.imageUrl ? `${variant.imageUrl.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} alt={variant.name} />
                         </div>
                         <div className={styles.variantInfo}>
                           <div className={styles.variantName}>{variant.name}</div>
@@ -1002,7 +1002,7 @@ const CustomerInfo = ({ userId, userName, isInline = false }) => {
                       {cartItems.map(item => (
                         <div key={item.variantId} className={styles.cartItem}>
                           <div className={styles.cartItemImage}>
-                            <img src={item.imageUrl} alt={item.productName} />
+                            <img src={item.imageUrl ? `${item.imageUrl.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} alt={item.productName} />
                           </div>
                           <div className={styles.cartItemInfo}>
                             <div className={styles.cartItemName}>{item.productName}</div>

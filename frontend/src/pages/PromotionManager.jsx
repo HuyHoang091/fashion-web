@@ -32,7 +32,7 @@ function PromotionManager() {
   const fetchDiscounts = async () => {
     try {
       setLoading(true);
-      const response = await axios.get('http://localhost:8080/api/discounts/');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/discounts/`);
       setPromotions(response.data);
     } catch (err) {
       showToast("Không thể tải danh sách khuyến mãi.", "error");
@@ -45,7 +45,7 @@ function PromotionManager() {
   // Fetch all categories
   const fetchCategories = async () => {
     try {
-      const response = await axios.get('http://localhost:8080/api/categorys/');
+      const response = await axios.get(`${process.env.REACT_APP_API_URL}/api/categorys/`);
       setCategories(response.data);
       
       // Auto-expand first level categories
@@ -170,12 +170,12 @@ function PromotionManager() {
       if (editingPromotion) {
         // Update existing discount
         response = await axios.put(
-          `http://localhost:8080/api/discounts/${editingPromotion.discountId}`, 
+          `${process.env.REACT_APP_API_URL}/api/discounts/${editingPromotion.discountId}`,
           discountData
         );
       } else {
         // Create new discount
-        response = await axios.post('http://localhost:8080/api/discounts/', discountData);
+        response = await axios.post(`${process.env.REACT_APP_API_URL}/api/discounts/`, discountData);
       }
       
       console.log("API response:", response.data);
@@ -252,7 +252,7 @@ function PromotionManager() {
     if (window.confirm("Bạn có chắc chắn muốn xóa khuyến mãi này?")) {
       try {
         setLoading(true);
-        await axios.delete(`http://localhost:8080/api/discounts/${promotionId}`);
+        await axios.delete(`${process.env.REACT_APP_API_URL}/api/discounts/${promotionId}`);
         fetchDiscounts();
         showToast("Xóa khuyến mãi thành công!");
       } catch (err) {

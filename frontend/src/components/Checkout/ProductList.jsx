@@ -21,10 +21,10 @@ const ProductList = ({ items }) => {
                 {items.map(item => (
                     <div key={item.id} className="product-item">
                         <div className="product-image-wrapper">
-                            <img src={item.url} alt={item.name} className="product-image" />
+                            <img src={item.url ? `${item.url.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} alt={item.name} className="product-image" />
                             <span className="product-quantity">{item.quantity}</span>
                         </div>
-                        <div className="product-info">
+                        <div className="product-info-checkout">
                             <h3 className="product-name">{item.name}</h3>
                             <p className="product-brand">{item.brand}</p>
                             <div className="product-specs">

@@ -22,7 +22,7 @@ const CartItemCard = ({ item, onUpdateQuantity, onRemoveItem, isSelected, onSele
                 <div>
                     <div className="item-image-wrapper">
                         <img 
-                            src={item.url} 
+                            src={item.url ? `${item.url.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'}
                             alt={item.name}
                             className="item-image"
                         />

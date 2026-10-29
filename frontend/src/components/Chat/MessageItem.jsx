@@ -18,7 +18,7 @@ export default function MessageItem({ content, time, status, isSender, type, cha
 
       <div className={`${styles.bubble} ${streaming ? styles.streaming : ""}`}>
         {type === "image" ? (
-          <img src={content} alt="uploaded" style={{ maxWidth: "250px", borderRadius: "8px" }} />
+          <img src={content ? `${content.replace("http://localhost:8080", process.env.REACT_APP_API_URL)}` : 'none'} alt="uploaded" style={{ maxWidth: "250px", borderRadius: "8px" }} />
         ) : (
           <p className={styles.text}>{content}</p>
         )}

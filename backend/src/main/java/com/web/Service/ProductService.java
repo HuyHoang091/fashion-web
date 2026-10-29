@@ -42,6 +42,7 @@ import com.web.Repository.ProductRepository;
 import com.web.Repository.ProductVariantRepository;
 import com.web.Repository.ReviewRepository;
 import com.web.Repository.SkuSequenceRepository;
+import java.text.DecimalFormat;
 
 @Service
 public class ProductService {
@@ -735,5 +736,79 @@ public class ProductService {
         }
         skuSequenceRepository.save(seq);
         return seq.getCurrentNumber();
+    }
+
+    public List<String> getProductChunks() {
+        List<ProductRepository.ProductChunkData> productData = productRepository.getProductChunkData();
+        List<String> chunks = new ArrayList<>();
+        DecimalFormat priceFormatter = new DecimalFormat("#,###");
+
+        for (ProductRepository.ProductChunkData data : productData) {
+            StringBuilder chunk = new StringBuilder();
+
+            // Tổng hợp thông tin sản phẩm
+            chunk.append(data.getName()).append("\n");
+            chunk.append("Mã sản phẩm: ").append(data.getSlug().toUpperCase()).append("\n");
+            chunk.append("Thương hiệu: ").append(data.getBrand()).append("\n");
+            chunk.append("Danh mục: ").append(data.getCategory()).append("\n");
+            chunk.append(data.getDescription()).append("\n");
+
+            // Thông tin size và màu sắc
+            chunk.append("Sản phẩm có các màu: ").append(data.getColors().replace(",", ", ")).append("\n");
+            chunk.append("Các size: ").append(data.getSizes().replace(",", ", ")).append("\n");
+
+            // Thông tin tồn kho theo size
+            chunk.append("Tồn kho theo size:\n");
+            String[] sizeStockPairs = data.getSizeStock().split(",");
+            for (String pair : sizeStockPairs) {
+                String[] parts = pair.split(":");
+                chunk.append("- Size ").append(parts[0]).append(": ").append(parts[1]).append(" sản phẩm\n");
+            }
+
+            // Thông tin giá
+            chunk.append("Giá bán hiện tại: ").append(priceFormatter.format(data.getMinPrice())).append(" VND\n");
+
+            // Đánh giá sản phẩm
+            chunk.append("Sản phẩm được đánh giá trung bình ").append(data.getAvgRating()).append("/5 từ ")
+                    .append(data.getReviewCount()).append(" lượt đánh giá.\n");
+
+            // Sản phẩm liên quan
+            if (data.getRelatedProducts() != null) {
+                chunk.append("Một số sản phẩm liên quan: ").append(data.getRelatedProducts().replace(",", ", "))
+                        .append(".\n");
+            }
+
+            // Hướng dẫn chọn size
+            chunk.append("Hướng dẫn chọn size:\n");
+            chunk.append(generateSizeGuide(data.getSizes().split(",")));
+
+            // Thêm chunk vào danh sách
+            chunks.add(chunk.toString());
+        }
+
+        return chunks;
+    }
+
+    private String generateSizeGuide(String[] sizes) {
+        StringBuilder guide = new StringBuilder();
+        for (String size : sizes) {
+            switch (size) {
+                case "S":
+                    guide.append("- Size S: phù hợp người cao dưới 1m60, cân nặng dưới 50kg.\n");
+                    break;
+                case "M":
+                    guide.append("- Size M: phù hợp người cao 1m60–1m68, cân nặng 50–58kg.\n");
+                    break;
+                case "L":
+                    guide.append("- Size L: phù hợp người cao 1m68–1m75, cân nặng 58–68kg.\n");
+                    break;
+                case "XL":
+                    guide.append("- Size XL: phù hợp người cao trên 1m75 hoặc cân nặng trên 68kg.\n");
+                    break;
+                default:
+                    guide.append("- Size ").append(size).append(": thông tin chưa được cập nhật.\n");
+            }
+        }
+        return guide.toString();
     }
 }

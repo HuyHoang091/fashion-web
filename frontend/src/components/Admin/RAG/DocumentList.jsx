@@ -79,7 +79,7 @@ const DocumentList = ({
   };
   
   // Hàm xử lý run/reload document
-  const handleRunDocument = async (documentId) => {
+  const handleRunDocument = async (documentId, action) => {
     setProcessingDocId(documentId);
     
     try {
@@ -90,7 +90,7 @@ const DocumentList = ({
         const document = documents.find(doc => doc.document_id === documentId);
         if (document) {
           // Gọi API với document ID hiện tại để ghi đè thay vì tạo mới
-          await onPushSystemData(documentId, document.name); 
+          await onPushSystemData(documentId, document.name, action); 
         }
       }
     } catch (error) {
@@ -168,7 +168,7 @@ const DocumentList = ({
                     {/* Run/Reload button */}
                     <button 
                       className={`${styles["btn"]} ${styles["icon-btn"]} ${hasChunks ? styles["reload-btn"] : styles["run-btn"]}`}
-                      onClick={() => handleRunDocument(document.document_id)}
+                      onClick={() => handleRunDocument(document.document_id, hasChunks ? 'reload' : 'run')}
                       disabled={isProcessing || loading}
                       title={hasChunks ? 'Reload Document' : 'Run Processing'}
                     >

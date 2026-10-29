@@ -38,7 +38,7 @@
 }
 
 /* ===== BUTTONS ===== */
-.btn {
+.btn-inventory {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -157,7 +157,7 @@
     flex: 1;
 }
 
-.stat-info .label {
+.stat-info .label-inventory {
     font-size: 0.875rem;
     color: #6b7280;
     margin-bottom: 0.25rem;

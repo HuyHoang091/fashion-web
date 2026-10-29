@@ -41,10 +41,10 @@ const ShopPage = () => {
         const loadData = async () => {
             try {
                 const [categoryRes, brandRes, variantRes, productRes] = await Promise.all([
-                    axios.get('http://localhost:8080/api/categorys/', { cancelToken: source.token }),
-                    axios.get('http://localhost:8080/api/brands/', { cancelToken: source.token }),
-                    axios.get('http://localhost:8080/api/products/variants/aggregation', { cancelToken: source.token }),
-                    axios.get('http://localhost:8080/api/products/info', { cancelToken: source.token })
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/categorys/`, { cancelToken: source.token }),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/brands/`, { cancelToken: source.token }),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/products/variants/aggregation`, { cancelToken: source.token }),
+                    axios.get(`${process.env.REACT_APP_API_URL}/api/products/info`, { cancelToken: source.token })
                 ]);
                 setCategoriesTree(buildCategoryTree(categoryRes.data || []));
                 setBrands(brandRes.data || []);
